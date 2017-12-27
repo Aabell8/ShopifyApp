@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Scrollable view here -->
+    <include layout="@layout/content_product_details" />
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/productDetailsContainer"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/productImage"-->
+            <!--android:padding="8dp">-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtProductName"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:fontFamily="sans-serif-condensed"-->
+                <!--android:text="..."-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtProductCodeLabel"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_below="@+id/txtProductName"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:text="Product #:" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtProductCode"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/txtProductName"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_toEndOf="@+id/txtProductCodeLabel"-->
+                <!--android:maxLines="1"-->
+                <!--android:text="" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtProductCategoryLabel"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_below="@+id/txtProductCodeLabel"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:text="Category:" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtProductCategory"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/txtProductCodeLabel"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_toEndOf="@+id/txtProductCodeLabel"-->
+                <!--android:maxLines="1"-->
+                <!--android:text="" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtUnitLabel"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_below="@+id/txtProductCategoryLabel"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:text="Unit:" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtUnit"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/txtProductCategoryLabel"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_toEndOf="@+id/txtProductCodeLabel"-->
+                <!--android:maxLines="1"-->
+                <!--android:text="" />-->
+            <!--<TextView-->
+                <!--android:id="@+id/txtProductDescription"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/txtUnitLabel"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:text="" />-->
+        <!--</RelativeLayout>-->
+    <!--</android.support.v4.widget.NestedScrollView>-->
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleGravity="top"
+            app:expandedTitleMarginStart="8dp"
+            app:expandedTitleMarginTop="8dp">
+
+            <ImageView
+                android:id="@+id/productImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.5"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/AppBar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                app:layout_collapseMode="pin"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>
