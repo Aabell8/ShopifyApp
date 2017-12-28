@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.rvProducts);
         mToolbar = findViewById(R.id.toolbar);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout_recycler_view);
         setSupportActionBar(mToolbar);
         if(savedInstanceState!=null){
             products = savedInstanceState.getParcelableArrayList("products_saved");
@@ -118,17 +118,20 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-//        optionsMenu = menu;
         return true;
     }
 
     private void populateProductList(){
         // Construct the data source
         if (products == null){
-            products = new ArrayList<>();
             mAsyncTask = new RetrieveProductListAsync();
             mAsyncTask.execute();
         }
+    }
+
+    private void refreshProductList(){
+        mAsyncTask = new RetrieveProductListAsync();
+        mAsyncTask.execute();
     }
 
     private class RetrieveProductListAsync extends AsyncTask<String, Void, String> {
@@ -163,12 +166,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if (mSwipeRefreshLayout!=null){
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
             if (s==null){
                 Toast.makeText(mRecyclerView.getContext(), "Could not retrieve data, try again", Toast.LENGTH_SHORT).show();
             }
             else {
                 Gson gson = new Gson();
                 ProductsJSON test = gson.fromJson(s, ProductsJSON.class);
+                products = new ArrayList<>();
                 products = test.getProducts();
                 initializeData();
             }
@@ -200,19 +207,17 @@ public class MainActivity extends AppCompatActivity {
             {
                 if (dy!=0){
                     mInputManager.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
 
         //Initialize once for closing soft keyboard on scroll
         mInputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout_recycler_view);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                populateProductList();
-                mSwipeRefreshLayout.setRefreshing(false);
+                refreshProductList();
             }
         });
     }

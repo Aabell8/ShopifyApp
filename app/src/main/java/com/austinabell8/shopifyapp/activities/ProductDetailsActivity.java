@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.austinabell8.shopifyapp.R;
 import com.austinabell8.shopifyapp.model.Product;
@@ -34,7 +35,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView mTxtProductType;
     private TextView mTxtTags;
     private TextView mTxtVendor;
-    private ImageView image;
+    private ImageView mImage;
     private Toolbar mToolbar;
 
     private RetrieveProductAsync mAsyncTask;
@@ -48,7 +49,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         mTxtProductType = findViewById(R.id.txtProductType);
         mTxtTags = findViewById(R.id.txtTags);
         mTxtVendor = findViewById(R.id.txtVendor);
-        image = findViewById(R.id.productImage);
+        mImage = findViewById(R.id.productImage);
         //change id to Your id
         mToolbar = findViewById(R.id.AppBar);
         setSupportActionBar(mToolbar);
@@ -119,15 +120,33 @@ public class ProductDetailsActivity extends AppCompatActivity {
             super.onPostExecute(s);
             Gson gson = new Gson();
             ProductJSON test = gson.fromJson(s, ProductJSON.class);
-            mProduct = test.getProduct();
-            mTxtTitle.setText(mProduct.getTitle());
-            mTxtDescription.setText(mProduct.getDescription());
-            mTxtProductType.setText(mProduct.getProductType());
-            mTxtTags.setText(mProduct.getTags());
-            mTxtVendor.setText(mProduct.getVendor());
-            Glide.with(image.getContext())
-                    .load(mProduct.getImage().getSrc())
-                    .into(image);
+            if(test!=null){
+                mProduct = test.getProduct();
+                if(mProduct.getTitle()!=null)
+                    mTxtTitle.setText(mProduct.getTitle());
+
+                if (mProduct.getDescription()!=null)
+                    mTxtDescription.setText(mProduct.getDescription());
+
+                if (mProduct.getProductType()!=null)
+                    mTxtProductType.setText(mProduct.getProductType());
+
+                if (mProduct.getTags()!=null)
+                    mTxtTags.setText(mProduct.getTags());
+
+                if (mProduct.getVendor()!=null)
+                    mTxtVendor.setText(mProduct.getVendor());
+
+                if (mProduct.getImage()!=null && mProduct.getImage().getSrc()!=null) {
+                    Glide.with(mImage.getContext())
+                            .load(mProduct.getImage().getSrc())
+                            .into(mImage);
+                }
+            }
+            else {
+                Toast.makeText(mTxtTitle.getContext(), "Could not retrieve specified product!", Toast.LENGTH_LONG).show();
+//                finish();
+            }
         }
     }
 
