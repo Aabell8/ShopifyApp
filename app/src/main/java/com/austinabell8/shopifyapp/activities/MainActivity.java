@@ -34,21 +34,24 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by austi on 2017-12-21.
+ * MainActivity - Base activity that lists products from Shopify API
+ * @author  Austin Abell
  */
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Product> products;
+    private static final String ACCESS_TOKEN = "c32313df0d0ef512ca64d5b336a0d7c6";
 
+    private ArrayList<Product> mProducts;
     private RecyclerView mRecyclerView;
     private SearchView mSearchView;
-    private InputMethodManager mInputManager;
 
+    private InputMethodManager mInputManager;
     private GridLayoutManager mLayoutManager;
     private ProductsRecyclerAdapter mProductsAdapter;
     private Toolbar mToolbar;
     private RetrieveProductListAsync mAsyncTask;
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
@@ -58,13 +61,24 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.rvProducts);
         mToolbar = findViewById(R.id.toolbar);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout_recycler_view);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshProductList(true);
+            }
+        });
+
         setSupportActionBar(mToolbar);
+
+        //Initialize Products from saved instance state, if it exists
         if(savedInstanceState!=null){
-            products = savedInstanceState.getParcelableArrayList("products_saved");
+            mProducts = savedInstanceState.getParcelableArrayList("products_saved");
             initializeData();
         }
-        if(products == null){
-            populateProductList();
+
+        //If it does not have saved state, retrieve products which will initialize data on complete
+        if(mProducts == null){
+            refreshProductList(false);
         }
 
     }
@@ -72,14 +86,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //Reset search to text input to search bar
         if(mProductsAdapter != null && mSearchView != null){
             mProductsAdapter.filter(mSearchView.getQuery().toString());
+        }
+        //Clear refreshing in case call was not completed after pause
+        if (mSwipeRefreshLayout != null){
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //Cancel background thread task when activity is destroyed
         if (mAsyncTask!=null){
             mAsyncTask.cancel(true);
         }
@@ -89,9 +109,11 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         if(mProductsAdapter!=null){
+            //If search limits product list, reset to full list before exiting
             mProductsAdapter.reset();
         }
-        savedInstanceState.putParcelableArrayList("products_saved", products);
+        //Save product list
+        savedInstanceState.putParcelableArrayList("products_saved", mProducts);
     }
 
     @Override
@@ -107,12 +129,14 @@ public class MainActivity extends AppCompatActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                //Hide keyboard on submit to view products queried
                 mInputManager.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
                 return true;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(mProductsAdapter!=null){
+                    //Filter product list based on text input
                     mProductsAdapter.filter(newText);
                 }
                 return true;
@@ -121,19 +145,22 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void populateProductList(){
-        // Construct the data source
-        if (products == null){
+    /**
+     * Method refreshes the list of Products and calls Async call to API
+     *
+     * @param reset A boolean to override if the list is reset
+     */
+    private void refreshProductList(boolean reset){
+        if(reset || mProducts == null){
+            // Async task to retrieve data and place in ArrayList
             mAsyncTask = new RetrieveProductListAsync();
             mAsyncTask.execute();
         }
     }
 
-    private void refreshProductList(){
-        mAsyncTask = new RetrieveProductListAsync();
-        mAsyncTask.execute();
-    }
-
+    /**
+     * This Async task calls the products API Call and retrieves necessary fields
+     */
     private class RetrieveProductListAsync extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -142,17 +169,19 @@ public class MainActivity extends AppCompatActivity {
 
             Request request;
             request = new Request.Builder()
-                    .url(reqURL + ".json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6&fields=id,image,title,body_html,image,product_type,tags,vendor")
+                    .url(reqURL + ".json?page=1&access_token=" + ACCESS_TOKEN +"&fields=id,image,title,body_html,product_type,tags")
                     .build();
 
             Response response = null;
 
+            //GET request call
             try {
                 response = client.newCall(request).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            //GET request return body, return json string
             try {
                 if(response != null) {
                     return response.body().string();
@@ -167,29 +196,38 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (mSwipeRefreshLayout!=null){
+                //If method was called with refresh layout, set refreshing to false
                 mSwipeRefreshLayout.setRefreshing(false);
             }
             if (s==null){
+                //If response back was invalid or failed, display toast
                 Toast.makeText(mRecyclerView.getContext(), "Could not retrieve data, try again", Toast.LENGTH_SHORT).show();
             }
             else {
+                //Build product list from json if successful
                 Gson gson = new Gson();
                 ProductsJSON test = gson.fromJson(s, ProductsJSON.class);
-                products = new ArrayList<>();
-                products = test.getProducts();
+                mProducts = new ArrayList<>();
+                mProducts = test.getProducts();
                 initializeData();
             }
         }
     }
 
+    /**
+     * Method initializes all of the packages variables used within the activity,
+     * including the adapters, layout managers, and listeners.
+     */
     private void initializeData() {
+
         mProductsAdapter = new ProductsRecyclerAdapter(mRecyclerView.getContext(),
-                products, new RecyclerViewClickListener() {
+                mProducts, new RecyclerViewClickListener() {
             @Override
             public void recyclerViewListClicked(View v, int position) {
                 if (position != -1){
+                    //Retrieve Id from item clicked, and pass it into an intent
                     Intent intent = new Intent(v.getContext(), ProductDetailsActivity.class);
-                    intent.putExtra("product_item", products.get(position).getId());
+                    intent.putExtra("product_item", mProducts.get(position).getId());
                     startActivity(intent);
                 }
             }
@@ -201,25 +239,10 @@ public class MainActivity extends AppCompatActivity {
 //        mRecyclerView.setNestedScrollingEnabled(false);
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
         mRecyclerView.setAdapter(mProductsAdapter);
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (dy!=0){
-                    mInputManager.hideSoftInputFromWindow(mRecyclerView.getWindowToken(), 0);
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
 
         //Initialize once for closing soft keyboard on scroll
         mInputManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshProductList();
-            }
-        });
+
     }
 
 

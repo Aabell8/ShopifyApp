@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by austi on 2017-12-25.
+ * ProductsJSON - Model class used for parsing json into Java object for list of products
+ *                to comply with Shopify API structure
+ * @author  Austin Abell
  */
 
 public class ProductsJSON {

@@ -5,7 +5,7 @@
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="@dimen/card_margins"
     android:elevation="@dimen/cardview_default_elevation"
     android:foreground="?attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/cardview_light_background"
@@ -28,8 +28,8 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:layout_below="@+id/productThumbnail"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingLeft="@dimen/activity_margin"
+            android:paddingRight="@dimen/activity_margin"
             android:paddingTop="0dp">
 
             <TextView

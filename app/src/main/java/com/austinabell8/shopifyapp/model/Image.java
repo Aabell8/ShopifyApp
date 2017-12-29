@@ -4,7 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by austi on 2017-12-25.
+ * Image - Model class for image object based on Shopify API
+ * @author  Austin Abell
  */
 
 public class Image implements Parcelable {

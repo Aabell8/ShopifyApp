@@ -1,7 +1,9 @@
 package com.austinabell8.shopifyapp.model;
 
 /**
- * Created by austi on 2017-12-25.
+ * ProductJSON - Model class used for parsing json into Java object for specific products
+ *               to comply with Shopify API structure
+ * @author  Austin Abell
  */
 
 public class ProductJSON {

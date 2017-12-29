@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by austi on 2017-12-27.
+ * SplashActivity - Activity that shows while MainActivity is inflated
+ * @author  Austin Abell
  */
 
 public class SplashActivity extends AppCompatActivity {
@@ -14,6 +15,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Activity does not inflate a view, simply shows while MainActivity is inflated
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

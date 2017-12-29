@@ -5,8 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 /**
- * Created by austi on 2017-12-21.
+ * Product - Model class for product object based on Shopify API
+ * @author  Austin Abell
  */
 
 public class Product implements Parcelable {
@@ -20,6 +23,8 @@ public class Product implements Parcelable {
     private String productType;
     private String tags;
     private String vendor;
+
+    private ArrayList<Variant> variants;
 
     public Long getId() {
         return id;
@@ -70,6 +75,14 @@ public class Product implements Parcelable {
         this.vendor = vendor;
     }
 
+    public ArrayList<Variant> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(ArrayList<Variant> variants) {
+        this.variants = variants;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -84,6 +97,7 @@ public class Product implements Parcelable {
         out.writeString(productType);
         out.writeString(tags);
         out.writeString(vendor);
+        out.writeList(variants);
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -96,7 +110,7 @@ public class Product implements Parcelable {
         }
     };
 
-    // example constructor that takes a Parcel and gives you an object populated with it's values
+    @SuppressWarnings("unchecked")
     private Product(Parcel in) {
         title = in.readString();
         description = in.readString();
@@ -104,6 +118,8 @@ public class Product implements Parcelable {
         productType = in.readString();
         tags = in.readString();
         vendor = in.readString();
+        variants = new ArrayList<>();
+        variants = in.readArrayList(Variant.class.getClassLoader());
     }
 
 }

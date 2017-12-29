@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by aabell on 8/1/2017.
+ * ProductsRecyclerAdapter - Adapter for recycler view of products from MainActivity
+ * @author  Austin Abell
  */
 
 public class ProductsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -53,6 +54,7 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             @Override
             public void onClick(View v) {
+                //Calls interface on item clicked
                 itemListener.recyclerViewListClicked(v, mViewHolder.getLayoutPosition());
             }
         });
@@ -65,10 +67,9 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         Product p = products.get(position);
         ProductViewHolder pHolder = (ProductViewHolder) holder;
 
+        //Update data in ProductViewHolder
         pHolder.itemName.setText(p.getTitle());
         pHolder.textProductCode.setText(p.getDescription());
-//        pHolder.productThumbnail.setImageResource(p.getImage());
-        //Glide.with(mContext).load(p.getImage()).thumbnail(0.1f).into(pHolder.productThumbnail);
         Glide.with(pHolder.productThumbnail)
                 .load(p.getImage().getSrc())
                 .into(pHolder.productThumbnail);
@@ -82,24 +83,28 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView itemName;
-        public CardView cardView;
-        public TextView textProductCode;
-        public ImageView productThumbnail;
+        private TextView itemName;
+        private TextView textProductCode;
+        private ImageView productThumbnail;
 
         public ProductViewHolder(View view) {
             super(view);
             itemName = view.findViewById(R.id.txtProductName);
             textProductCode = view.findViewById(R.id.txtProductDescription);
-            cardView = view.findViewById(R.id.cardView);
             productThumbnail = view.findViewById(R.id.productThumbnail);
         }
 
     }
 
+    /**
+     * Method queries product list based on input text,
+     * searches by title, description, tags, and product type currently
+     * @param text  input text
+     */
     public void filter(String text) {
         products.clear();
         if(text.isEmpty()){
+            //Add products back when text is cleared
             products.addAll(staticProducts);
         } else{
             text = text.toLowerCase();
@@ -115,6 +120,9 @@ public class ProductsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged();
     }
 
+    /**
+     * Method is used when exiting MainActivity not to save the queried list instead of full
+     */
     public void reset() {
         products.clear();
         products.addAll(staticProducts);
