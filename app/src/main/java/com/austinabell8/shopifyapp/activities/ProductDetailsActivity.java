@@ -68,6 +68,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         //Layout manager for variants
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.HORIZONTAL, false);
         mVariantRecyclerView.setLayoutManager(gridLayoutManager);
+        mVariantRecyclerView.setNestedScrollingEnabled(false);
 
         mToolbar = findViewById(R.id.AppBar);
         setSupportActionBar(mToolbar);

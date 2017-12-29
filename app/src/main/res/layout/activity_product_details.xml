@@ -17,8 +17,7 @@
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleGravity="top"
-            app:expandedTitleMarginStart="@dimen/activity_margin"
-            app:expandedTitleMarginTop="@dimen/activity_margin">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/productImage"

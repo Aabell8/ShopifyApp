@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Austin's Products");
 
         //Initialize Products from saved instance state, if it exists
         if(savedInstanceState!=null){

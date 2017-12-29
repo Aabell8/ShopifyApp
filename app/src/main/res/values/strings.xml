@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">ShopifyApp</string>
-    <string name="variants_title">Variants:</string>
+    <string name="variants_title">Variants</string>
     <string name="product_image">Product Image</string>
     <string name="tags">Tags</string>
     <string name="vendor">Vendor</string>
+    <string name="description">Description</string>
 </resources>

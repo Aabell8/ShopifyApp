@@ -38,7 +38,7 @@ public class VariantsRecyclerAdapter extends RecyclerView.Adapter<VariantsRecycl
     public void onBindViewHolder(VariantViewHolder holder, int position) {
         //Initialize data on each ViewHolder
         holder.setTitle(mVariants.get(position).getTitle());
-        holder.setPrice("$" + new DecimalFormat("#.00").format(mVariants.get(position).getPrice()));
+        holder.setPrice("$" + new DecimalFormat("#0.00").format(mVariants.get(position).getPrice()));
     }
 
     @Override
