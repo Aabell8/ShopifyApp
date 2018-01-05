@@ -157,7 +157,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 test = gson.fromJson(s, ProductJSON.class);
             }
-            if(test!=null) {
+            if(test!=null && test.getErrors()==null) {
                 mProduct = test.getProduct();
 
                 //Initialize all data in activity, if retrieved from API call

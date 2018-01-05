@@ -19,8 +19,7 @@
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:scaleType="centerInside"
-            />
+            android:scaleType="centerInside" />
 
         <RelativeLayout
             android:id="@+id/productNameContainer"

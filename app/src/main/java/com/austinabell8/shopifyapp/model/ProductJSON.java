@@ -8,6 +8,7 @@ package com.austinabell8.shopifyapp.model;
 
 public class ProductJSON {
     private Product product;
+    private String errors;
 
     public Product getProduct() {
         return product;
@@ -15,5 +16,13 @@ public class ProductJSON {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getErrors() {
+        return errors;
+    }
+
+    public void setErrors(String errors) {
+        this.errors = errors;
     }
 }
